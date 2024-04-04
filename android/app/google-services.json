@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "753616379129",
+    "project_id": "netflixclone-5d2ef",
+    "storage_bucket": "netflixclone-5d2ef.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:753616379129:android:e1809423d72a889bc29628",
+        "android_client_info": {
+          "package_name": "com.figmadesign"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD1qZ8utQZ_kojkbGLRIRCzCbzX8Wk4T1w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
