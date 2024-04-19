@@ -1,5 +1,5 @@
 import React from 'react'
-import { FlatList, Image, SafeAreaView, StyleSheet, Text, View } from 'react-native'
+import { FlatList, Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { colors } from '../constants/colors'
 import { comingSoonData } from '../constants/comingSoonData'
 import { fonts } from '../constants/fonts'
@@ -27,9 +27,14 @@ const renderData = ({ item }: RenderDataProps) => {
                     style={styles.image}
                 />
                 <View style={styles.iconContainer}>
-                    <BellIcon name="bell" size={24} style={styles.bellicon} />
-
-                    <ShareIcon name="share" size={26} style={styles.shareIcon} />
+                    <TouchableOpacity style={styles.iconTxt}>
+                        <BellIcon name="bell" size={24} style={styles.bellicon} />
+                        <Text style={styles.descTxt}>Remind me</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.iconTxt}>
+                        <ShareIcon name="share" size={26} style={styles.bellicon} />
+                        <Text style={styles.descTxt}>Share</Text>
+                    </TouchableOpacity>
                 </View>
                 <View style={styles.txtContainer}>
 
@@ -72,9 +77,9 @@ const styles = StyleSheet.create({
         backgroundColor: colors.black,
     },
     image: {
-        height: 150,
+        height: 190,
         width: 400,
-        marginVertical: 10
+        // marginVertical: 10
     },
     headTxt: {
         color: colors.white,
@@ -85,7 +90,6 @@ const styles = StyleSheet.create({
     },
     bannerContainer: {
         alignItems: "center",
-
     },
     txtContainer: {
         marginHorizontal: 10
@@ -103,17 +107,22 @@ const styles = StyleSheet.create({
     },
     bellicon: {
         color: colors.white,
-        position: "absolute",
-        right: 66,
+        // position: "absolute",
+        // right: 66,
+        marginVertical: 5
 
     },
-    shareIcon: {
-        color: colors.white,
-        position: "absolute",
-        right: 10,
+    iconTxt: {
+        alignItems: "center",
     },
+
     iconContainer: {
-        marginVertical: 30,
-        justifyContent: "flex-end"
+        marginVertical: 10,
+        marginHorizontal: 10,
+        justifyContent: "flex-end",
+        alignItems: "center",
+        flexDirection: "row",
+        gap: 20,
+        // backgroundColor: "red"
     }
 })

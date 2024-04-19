@@ -1,5 +1,5 @@
 import React from 'react'
-import { FlatList, Image, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { FlatList, Image, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { colors } from '../constants/colors'
 import SearchIcon from 'react-native-vector-icons/FontAwesome';
 import PlayIcon from 'react-native-vector-icons/AntDesign';
@@ -33,14 +33,16 @@ const renderSearchItems = ({ item }: RenderDataProps) => {
 const Search = () => {
     return (
         <SafeAreaView style={styles.container}>
-
             <View>
-                <TextInput placeholder='Search for a show, movie, genre, e.t.c'
-                    placeholderTextColor={colors.grey} style={styles.input} />
+                <TextInput
+                    placeholder='Search for a show, movie, genre, etc.'
+                    placeholderTextColor={colors.grey}
+                    style={styles.input}
+                />
                 <SearchIcon name="search" size={20} style={styles.iconSearch} />
                 <SearchIcon name="microphone" size={20} style={styles.iconMicrophone} />
             </View>
-            <View >
+            <View style={styles.searchResultsContainer}>
                 <Text style={styles.topSearchesTxt}>
                     Top Searches
                 </Text>
@@ -48,11 +50,10 @@ const Search = () => {
                     data={searchData}
                     renderItem={renderSearchItems}
                     keyExtractor={item => item.id.toString()}
-
                 />
             </View>
         </SafeAreaView>
-    )
+    );
 }
 
 export default Search
@@ -84,7 +85,7 @@ const styles = StyleSheet.create({
     },
 
     topSearchesTxt: {
-        color: 'white',
+        color: colors.white,
         fontFamily: fonts.poppinsRegular,
         fontWeight: "900",
         fontSize: 22,
@@ -116,5 +117,8 @@ const styles = StyleSheet.create({
         color: colors.white,
         position: "absolute",
         right: 12
-    }
+    },
+    searchResultsContainer: {
+        flex: 1
+    },
 })

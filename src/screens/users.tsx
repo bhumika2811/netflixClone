@@ -14,7 +14,7 @@ import { addProfile } from '../constants/addprofileImage';
 interface RenderDataProps {
     item: {
         id: number;
-        profile: ImageSourcePropType;
+        profile: string;
         name: string;
 
     };
@@ -24,53 +24,56 @@ interface RenderDataProps {
 const Users = () => {
     const numOfCols = 2;
     const navigation = useNavigation();
-    const [Profiles, setUserProfiles] = useState([]);
-    useEffect(() => {
-        const unsubscribe = firestore().collection("UserProfiles").onSnapshot((snapshot) => {
-            const profilesData = [];
-            snapshot.forEach((doc) => {
-                profilesData.push({ id: doc.id, ...doc.data() });
-            });
-            console.log({ profilesData })
-            setUserProfiles(profilesData);
-        });
+    // const [Profiles, setUserProfiles] = useState([]);
+    // useEffect(() => {
+    //     const unsubscribe = firestore().collection("UserProfiles").onSnapshot((snapshot) => {
+    //         const profilesData = [];
+    //         snapshot.forEach((doc) => {
+    //             profilesData.push({ id: doc.id, ...doc.data() });
+    //         });
+    //         console.log({ profilesData })
+    //         setUserProfiles(profilesData);
+    //     });
 
-        return () => unsubscribe();
-    }, []);
+    //     return () => unsubscribe();
+    // }, []);
 
-    const handleAddProfile = () => {
-        const dupl = userProfiles;
-        console.log({ dupl })
-        if (dupl.length) {
-            const randomProfile = dupl[0];
-            const newProfile = {
-                name: randomProfile.name,
-                profile: randomProfile.profile
-            };
-            firestore()
-                .collection("UserProfiles")
-                .add({
-                    name: newProfile.name,
-                    profile: newProfile.profile
-                })
-                .then(() => {
-                    console.log("New profile added to Firestore");
-                })
-                .catch((error) => {
-                    console.error("Error adding new profile: ", error);
-                });
-            dupl.shift();
-        }
-        else {
-            console.log('No profiles added more')
-        }
+    // const handleAddProfile = () => {
+    //     const dupl = userProfiles;
+    //     console.log({ dupl })
+    //     if (dupl.length) {
+    //         const randomProfile = dupl[0];
+    //         const newProfile = {
+    //             name: randomProfile.name,
+    //             profile: randomProfile.profile
+    //         };
+    //         firestore()
+    //             .collection("UserProfiles")
+    //             .add({
+    //                 name: newProfile.name,
+    //                 profile: newProfile.profile
+    //             })
+    //             .then(() => {
+    //                 console.log("New profile added to Firestore");
+    //             })
+    //             .catch((error) => {
+    //                 console.error("Error adding new profile: ", error);
+    //             });
+    //         dupl.shift();
+    //     }
+    //     else {
+    //         console.log('No profiles added more')
+    //     }
 
-    };
+    // };
+    const handleNavigate = () => {
+        navigation.navigate('MyHome');
+    }
 
-    const renderItem = ({ item }) => {
+    const renderItem = ({ item }: RenderDataProps) => {
         return (
             <View style={styles.userProfileContainer}>
-                <TouchableOpacity style={styles.userProfileImage} onPress={() => navigation.navigate("Profile", { profile: item })}>
+                <TouchableOpacity style={styles.userProfileImage} onPress={handleNavigate}>
                     <Image source={{ uri: item.profile }} style={styles.image}
                         resizeMode="contain" />
                 </TouchableOpacity>
@@ -84,17 +87,14 @@ const Users = () => {
     return (
         <SafeAreaView style={styles.container}>
             <FlatList
-                keyExtractor={(item) => item.id}
-                data={Profiles}
+                keyExtractor={(item) => item.id.toString()}
+                data={userProfiles}
                 renderItem={renderItem}
                 numColumns={numOfCols}
                 contentContainerStyle={styles.flatListContainer}
 
             />
-            <TouchableOpacity onPress={handleAddProfile} style={styles.addBtn}>
-                <Image source={require("../assets/images/AddProfile.png")} />
 
-            </TouchableOpacity>
         </SafeAreaView>
     );
 };

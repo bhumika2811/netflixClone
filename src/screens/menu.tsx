@@ -1,15 +1,16 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, SafeAreaView, Image, StyleSheet, TextInput, ImageSourcePropType } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, SafeAreaView, Image, StyleSheet, TextInput, Clipboard, Alert, Modal } from 'react-native';
 import Social from 'react-native-vector-icons/MaterialCommunityIcons';
 import MoreIcon from 'react-native-vector-icons/Feather';
 import { FlatList } from 'react-native';
 import { colors } from '../constants/colors';
 import { userProfiles } from '../constants/userProfiles';
 import { fonts } from '../constants/fonts';
+import { useNavigation } from '@react-navigation/native';
 interface RenderDataProps {
     item: {
         id: number;
-        profile: ImageSourcePropType;
+        profile: string;
         name: string;
     };
 }
@@ -19,7 +20,7 @@ const renderItem = ({ item }: RenderDataProps) => {
     return (
         <View >
             <TouchableOpacity style={styles.profileContainer}>
-                <Image source={item.profile} style={styles.image} />
+                <Image source={{ uri: item.profile }} style={styles.image} />
                 <Text style={styles.text}>{item.name}</Text>
             </TouchableOpacity>
 
@@ -27,6 +28,32 @@ const renderItem = ({ item }: RenderDataProps) => {
     );
 };
 const MyMenu = () => {
+    const [link, setLink] = useState('');
+    const [showCopiedMessage, setShowCopiedMessage] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+    const navigation = useNavigation()
+    const handleMorePress = () => {
+        setShowModal(true);
+    };
+    const handleCloseModal = () => {
+        setShowModal(false);
+    };
+    const handleLinkClick = (linkText: any) => {
+        setLink(linkText);
+    };
+    const handleCopyLink = () => {
+        if (link) {
+            Clipboard.setString(link);
+            setShowCopiedMessage(true);
+            setTimeout(() => {
+                setShowCopiedMessage(false);
+
+            }, 3000);
+        }
+    };
+    const handleLogOut = () => {
+        navigation.navigate("Login")
+    }
     return (
         <SafeAreaView style={styles.conatiner}>
             <View>
@@ -40,7 +67,6 @@ const MyMenu = () => {
                 />
                 <View>
                     <TouchableOpacity style={{ alignItems: "center" }}>
-                        {/* <Icon name="pencil" size={15} style={[styles.icon, { right: 80, top: 10 }]} /> */}
                         <Text style={styles.manageProfilesTxt}>
                             Manage Profiles
                         </Text>
@@ -58,26 +84,27 @@ const MyMenu = () => {
                         Terms & Conditions
                     </Text>
                     <View style={styles.inputBtnContainer}>
-                        <TextInput style={styles.input} placeholder='enter' />
+                        <TextInput style={styles.input} value={link} onChangeText={setLink} />
                         <TouchableOpacity style={styles.btn}>
-                            <Text style={styles.btntxt}>Copy Link</Text>
+                            <Text style={styles.btntxt} onPress={handleCopyLink}>Copy Link</Text>
                         </TouchableOpacity>
 
                     </View>
+
                     <View style={styles.iconContainer}>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={() => handleLinkClick('https://whatsapp.com')}>
                             <Social name="whatsapp" size={40} style={styles.icon} />
                         </TouchableOpacity>
                         <View style={styles.verticleLine}></View>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={() => handleLinkClick('https://facebook.com')}>
                             <Social name="facebook" size={40} style={styles.icon} />
                         </TouchableOpacity>
                         <View style={styles.verticleLine}></View>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={() => handleLinkClick('https://gmail.com')}>
                             <Social name="gmail" size={40} style={styles.icon} />
                         </TouchableOpacity>
                         <View style={styles.verticleLine}></View>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={handleMorePress}>
                             <View style={styles.moreContainer}>
                                 <MoreIcon name="more-horizontal" size={40} style={styles.icon} />
                                 <Text style={styles.containerViewText1}>
@@ -85,7 +112,37 @@ const MyMenu = () => {
                                 </Text>
                             </View>
                         </TouchableOpacity>
+                        <Modal
+
+                            animationType="slide"
+                            transparent={true}
+                            visible={showModal}
+
+                        >
+                            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+                                <View style={{ backgroundColor: colors.bottomTabGrey, padding: 20, borderRadius: 10, width: '80%' }}>
+                                    <TouchableOpacity>
+                                        <Text style={{ fontSize: 14, marginBottom: 10, color: colors.white }}>Text Message</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity >
+                                        <Text style={{ fontSize: 14, marginBottom: 10, color: colors.white }}>Outlook Mail</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity >
+                                        <Text style={{ fontSize: 14, marginBottom: 10, color: colors.white }}>Telegram</Text>
+                                    </TouchableOpacity>
+                                    {/* Add more share options as needed */}
+                                    <TouchableOpacity onPress={handleCloseModal} >
+                                        <Text style={{ fontSize: 16, color: colors.blue }}>Cancel</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        </Modal>
                     </View>
+                    {showCopiedMessage && (
+                        <View style={{ alignItems: "center" }}>
+                            <Text style={styles.copiedTxt}>Link copied to clipboard!</Text>
+                        </View>
+                    )}
                 </View>
                 <View style={styles.myListContainer}>
                     <View style={styles.myList}>
@@ -116,7 +173,7 @@ const MyMenu = () => {
                             Help
                         </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={handleLogOut}>
 
                         <Text style={styles.mylistText}>
                             Sign Out
@@ -135,7 +192,7 @@ const styles = StyleSheet.create({
         backgroundColor: colors.black
     },
     profileContainer: {
-        padding: 4,
+        paddingHorizontal: 6,
         marginVertical: 20,
         alignItems: "center"
     },
@@ -150,6 +207,14 @@ const styles = StyleSheet.create({
         height: 66,
         width: 66,
         borderRadius: 8
+    },
+    copiedTxt: {
+        backgroundColor: colors.grey,
+        color: colors.black, fontSize: 14,
+        position: "absolute",
+        zIndex: 1,
+        padding: 12,
+        borderRadius: 3
     },
     manageProfilesTxt: {
         color: colors.white,

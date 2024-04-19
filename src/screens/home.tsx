@@ -31,9 +31,9 @@ interface RenderSectionListProps {
 
 const renderCategory = ({ item }: RenderCategoryProps) => {
     return (
-        <View>
+        <TouchableOpacity>
             <Text style={styles.txt}>{item.category}</Text>
-        </View>
+        </TouchableOpacity>
     );
 };
 
@@ -73,9 +73,6 @@ const SectionListItem = ({ item }: RenderSectionListProps) => (
 
 );
 
-
-
-
 const Home = () => {
     return (
         <SafeAreaView style={styles.container}>
@@ -84,12 +81,16 @@ const Home = () => {
                     <Image source={image.backGround} style={styles.image} />
                     <Image source={image.icon} style={styles.logo} />
                     <View style={styles.overlay}>
-                        <FlatList
-                            renderItem={renderCategory}
-                            data={category}
-                            keyExtractor={(item) => item.id.toString()}
-                            contentContainerStyle={styles.listContainer}
-                        />
+                        <View style={styles.txtContainer}>
+
+                            <FlatList
+                                renderItem={renderCategory}
+                                data={category}
+                                keyExtractor={(item) => item.id.toString()}
+                                contentContainerStyle={styles.listContainer}
+                            />
+
+                        </View>
                     </View>
                     <View style={styles.btnContainer}>
                         <View>
@@ -107,18 +108,22 @@ const Home = () => {
                     </View>
                     <View style={styles.preview}>
                         <Text style={styles.previewTxt}>Previews</Text>
-                        <FlatList
-                            data={imageList}
-                            renderItem={renderPreview}
-                            keyExtractor={item => item.id.toString()}
-                            horizontal
-                        />
+                        <SafeAreaView style={{ flex: 1 }}>
+                            <FlatList
+                                data={imageList}
+                                renderItem={renderPreview}
+                                keyExtractor={item => item.id.toString()}
+                                horizontal
+                            />
+                        </SafeAreaView>
                     </View>
-                    <FlatList
-                        renderItem={SectionListItem}
-                        data={sectionData}
-                        keyExtractor={(item) => item.id.toString()}
-                    />
+                    <SafeAreaView style={{ flex: 1 }}>
+                        <FlatList
+                            renderItem={SectionListItem}
+                            data={sectionData}
+                            keyExtractor={(item) => item.id.toString()}
+                        />
+                    </SafeAreaView>
                 </View>
             </ScrollView>
         </SafeAreaView>
@@ -140,9 +145,15 @@ const styles = StyleSheet.create({
         position: 'absolute',
         width: '100%',
         height: '100%',
+
+    },
+    txtContainer: {
+        alignItems: "flex-end",
+        width: "100%",
+        flex: 1
     },
     txt: {
-        color: 'white',
+        color: colors.white,
         fontFamily: fonts.poppinsRegular,
         fontSize: 16,
     },
