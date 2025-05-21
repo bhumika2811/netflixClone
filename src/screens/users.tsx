@@ -21,59 +21,26 @@ interface RenderDataProps {
     navigation: NavigationProp<ParamListBase>;
 }
 
-const Users = () => {
+const Users = ({route}) => {
     const numOfCols = 2;
     const navigation = useNavigation();
-    // const [Profiles, setUserProfiles] = useState([]);
-    // useEffect(() => {
-    //     const unsubscribe = firestore().collection("UserProfiles").onSnapshot((snapshot) => {
-    //         const profilesData = [];
-    //         snapshot.forEach((doc) => {
-    //             profilesData.push({ id: doc.id, ...doc.data() });
-    //         });
-    //         console.log({ profilesData })
-    //         setUserProfiles(profilesData);
-    //     });
-
-    //     return () => unsubscribe();
-    // }, []);
-
-    // const handleAddProfile = () => {
-    //     const dupl = userProfiles;
-    //     console.log({ dupl })
-    //     if (dupl.length) {
-    //         const randomProfile = dupl[0];
-    //         const newProfile = {
-    //             name: randomProfile.name,
-    //             profile: randomProfile.profile
-    //         };
-    //         firestore()
-    //             .collection("UserProfiles")
-    //             .add({
-    //                 name: newProfile.name,
-    //                 profile: newProfile.profile
-    //             })
-    //             .then(() => {
-    //                 console.log("New profile added to Firestore");
-    //             })
-    //             .catch((error) => {
-    //                 console.error("Error adding new profile: ", error);
-    //             });
-    //         dupl.shift();
-    //     }
-    //     else {
-    //         console.log('No profiles added more')
-    //     }
-
-    // };
+    const {user} = route?.params;
+    console.log({user});
+    
+    const [Profiles, setUserProfiles] = useState([]);
+    
     const handleNavigate = () => {
         navigation.navigate('MyHome');
+    }
+    const handleAddProfile=()=>{
+
     }
 
     const renderItem = ({ item }: RenderDataProps) => {
         return (
             <View style={styles.userProfileContainer}>
-                <TouchableOpacity style={styles.userProfileImage} onPress={handleNavigate}>
+                
+                <TouchableOpacity style={styles.userProfileImage} onPress={handleAddProfile}>
                     <Image source={{ uri: item.profile }} style={styles.image}
                         resizeMode="contain" />
                 </TouchableOpacity>
@@ -86,11 +53,24 @@ const Users = () => {
 
     return (
         <SafeAreaView style={styles.container}>
+            <View style={{height:50, marginTop:30, alignItems:"center", justifyContent:"center"}}>
+            <Text style={{color:"white"}}>Welcome, {user?.displayName}</Text>
+            </View>
+            <View style={styles.userProfileContainer}>
+                
+                <TouchableOpacity style={styles.userProfileImage} onPress={handleNavigate}>
+                    <Image source={{ uri: "https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png" }} style={styles.image}
+                        resizeMode="contain" />
+                </TouchableOpacity>
+                <View>
+                    <Text style={styles.userProfileTxt}>{user?.displayName}</Text>
+                </View>
+            </View>
             <FlatList
                 keyExtractor={(item) => item.id.toString()}
                 data={userProfiles}
                 renderItem={renderItem}
-                numColumns={numOfCols}
+                // numColumns={numOfCols}
                 contentContainerStyle={styles.flatListContainer}
 
             />
@@ -104,7 +84,8 @@ export default Users;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: colors.black
+        backgroundColor: colors.black,
+        
     },
     imageContainer: {
         alignItems: "center",
@@ -140,8 +121,8 @@ const styles = StyleSheet.create({
     },
     flatListContainer: {
         alignSelf: "center",
-        justifyContent: "center",
-        flex: 1
+        // justifyContent: "center",
+        flex: 0.5
     },
     addBtn: {
         position: "absolute",

@@ -5,10 +5,13 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { image } from '../constants/netflixName';
 
-import { getAuth, signInWithEmailAndPassword } from '@react-native-firebase/auth';
-// import { auth } from '../../firebaseConfig';
+import { getAuth, createUserWithEmailAndPassword, updateProfile } from '@react-native-firebase/auth';
+import { getApp } from '@react-native-firebase/app';
 
-const NetflixLoginPage = () => {
+const SignUp = () => {
+  const [name, setName] = useState('');
+  const [nameError, setNameError] = useState('');
+
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState('');
 
@@ -17,13 +20,21 @@ const NetflixLoginPage = () => {
 
   const [generalError, setGeneralError] = useState('');
   const [loading, setLoading] = useState(false);
-  const auth = getAuth();
+
   const navigation = useNavigation();
+  const auth = getAuth(getApp());
 
   const isValidEmail = (email) => /\S+@\S+\.\S+/.test(email);
 
   const validateInputs = () => {
     let valid = true;
+
+    if (!name.trim()) {
+      setNameError('Name is required');
+      valid = false;
+    } else {
+      setNameError('');
+    }
 
     if (!email.trim()) {
       setEmailError('Email is required');
@@ -55,16 +66,17 @@ const NetflixLoginPage = () => {
     setLoading(true);
 
     try {
-     const userCredential= await signInWithEmailAndPassword(auth, email, password);
-     const user = userCredential.user;
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      // Update display name in Firebase user profile
+      await updateProfile(userCredential.user, { displayName: name });
+      console.log('User created:', userCredential.user);
 
       setLoading(false);
-      console.log('Login successful!');
-      navigation.navigate('User',{user:user} );  // Adjust 'UserScreen' to your target screen name
-    } catch (err) {
-      setLoading(false);
-      const message = err?.message || 'Login failed. Please try again.';
+      navigation.navigate('User', { user: userCredential.user });
+    } catch (error) {
+      const message = error?.message || 'An unknown error occurred';
       setGeneralError(message);
+      setLoading(false);
       console.log('Login error:', message);
     }
   };
@@ -76,6 +88,17 @@ const NetflixLoginPage = () => {
       </View>
 
       <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          placeholder="Name"
+          placeholderTextColor="#aaa"
+          onChangeText={setName}
+          value={name}
+          autoCapitalize="words"
+          textContentType="name"
+        />
+        {!!nameError && <Text style={styles.errorText}>{nameError}</Text>}
+
         <TextInput
           style={styles.input}
           placeholder="Email"
@@ -110,12 +133,12 @@ const NetflixLoginPage = () => {
         onPress={handleLogin}
         disabled={loading}
       >
-        <Text style={styles.loginButtonText}>{loading ? 'Logging In...' : 'Log In'}</Text>
+        <Text style={styles.loginButtonText}>{loading ? 'Loading...' : 'Sign Up'}</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
+      <TouchableOpacity onPress={() => navigation.navigate('Login')}>
 
-<Text style={{color:'white', fontSize:16}}>Dont have an account? Sign Up</Text>
-</TouchableOpacity>
+      <Text style={{color:'white', fontSize:16}}>Already have an account? Login</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -154,7 +177,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     width: '80%',
     alignItems: 'center',
-    marginBottom:20
+    marginBottom: 30
   },
   disabledButton: {
     opacity: 0.6,
@@ -173,7 +196,8 @@ const styles = StyleSheet.create({
     color: '#ff4d4d',
     marginBottom: 15,
     textAlign: 'center',
+    paddingHorizontal:30
   },
 });
 
-export default NetflixLoginPage;
+export default SignUp;

@@ -6,9 +6,10 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath('com.android.tools.build:gradle')
-    classpath('com.facebook.react:react-native-gradle-plugin')
-    classpath('org.jetbrains.kotlin:kotlin-gradle-plugin')
+    classpath 'com.android.tools.build:gradle:8.0.2' // ✅ Specify exact version
+    classpath 'com.facebook.react:react-native-gradle-plugin'
+    classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.21'
+    classpath 'com.google.gms:google-services:4.4.2' // ✅ Latest stable version for Firebase
   }
 }
 
@@ -35,3 +36,5 @@ allprojects {
 
 apply plugin: "expo-root-project"
 apply plugin: "com.facebook.react.rootproject"
+// ❌ DO NOT apply 'com.google.gms.google-services' here
+// ✅ It should ONLY be in android/app/build.gradle (which you've already done)

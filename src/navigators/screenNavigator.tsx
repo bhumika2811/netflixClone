@@ -3,11 +3,13 @@ import React from 'react';
 import BottomNavigation from './bottomNavigator';
 import User from '../screens/users'
 import NetflixLoginPage from '../screens/loginPage';
+import SignUp from '../screens/signUp';
 const Stack = createNativeStackNavigator();
 const ScreenNavigator = () => {
     return (
 
-        <Stack.Navigator initialRouteName='Login' screenOptions={{ headerShown: false }}>
+        <Stack.Navigator initialRouteName='SignUp' screenOptions={{ headerShown: false }}>
+            <Stack.Screen name='SignUp' component={SignUp} />
             <Stack.Screen name="Login" component={NetflixLoginPage} />
             <Stack.Screen name="User" component={User}
             />

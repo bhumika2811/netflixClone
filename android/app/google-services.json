@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "746719587048",
+    "project_id": "netflix-clone-efd04",
+    "storage_bucket": "netflix-clone-efd04.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:746719587048:android:3d12bc2e0d064dfcceb75d",
+        "android_client_info": {
+          "package_name": "com.anonymous.netflixClone"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8t74kQTv2H3MtHiGN-rAAyVyCjTLff1s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
