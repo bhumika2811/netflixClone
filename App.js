@@ -5,8 +5,8 @@ import ScreenNavigator from './src/navigators/screenNavigator';
 import { StatusBar } from 'react-native';
 const App = () => {
   useEffect(() => {
-    SplashScreen.hide();
-    StatusBar.setBackgroundColor("black")
+    SplashScreen?.hide();
+    StatusBar?.setBackgroundColor("black")
   }, []);
   return (
     <NavigationContainer>
