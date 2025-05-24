@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { use, useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, SafeAreaView, Image, StyleSheet } from 'react-native';
 import { NavigationProp, ParamListBase, useNavigation } from '@react-navigation/native';
 import { images } from '../assets';
+import auth from '@react-native-firebase/auth';
+
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { FlatList } from 'react-native';
 import { colors } from '../constants/colors';
@@ -22,25 +24,30 @@ interface RenderDataProps {
 }
 
 const Users = ({route}) => {
-    const numOfCols = 2;
-    const navigation = useNavigation();
-    const {user} = route?.params;
-    console.log({user});
-    
-    const [Profiles, setUserProfiles] = useState([]);
-    
-    const handleNavigate = () => {
-        navigation.navigate('MyHome');
-    }
-    const handleAddProfile=()=>{
+    const [currentUser, setCurrentUser] = useState(null);
 
-    }
+  useEffect(() => {
+    const user = auth().currentUser;
+    // console.log({user});
+    
+    setCurrentUser(user);
+
+    // Optional: set up listener if user data might change dynamically
+    const unsubscribe = auth().onAuthStateChanged((user) => {
+      setCurrentUser(user);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
 
     const renderItem = ({ item }: RenderDataProps) => {
         return (
             <View style={styles.userProfileContainer}>
                 
-                <TouchableOpacity style={styles.userProfileImage} onPress={handleAddProfile}>
+                <TouchableOpacity style={styles.userProfileImage} 
+                // onPress={handleAddProfile}
+                >
                     <Image source={{ uri: item.profile }} style={styles.image}
                         resizeMode="contain" />
                 </TouchableOpacity>
@@ -54,16 +61,18 @@ const Users = ({route}) => {
     return (
         <SafeAreaView style={styles.container}>
             <View style={{height:50, marginTop:30, alignItems:"center", justifyContent:"center"}}>
-            <Text style={{color:"white"}}>Welcome, {user?.displayName}</Text>
+            <Text style={{color:"white"}}>Welcome, {currentUser?.displayName}</Text>
             </View>
             <View style={styles.userProfileContainer}>
                 
-                <TouchableOpacity style={styles.userProfileImage} onPress={handleNavigate}>
+                <TouchableOpacity style={styles.userProfileImage} 
+                // onPress={handleNavigate}
+                >
                     <Image source={{ uri: "https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png" }} style={styles.image}
                         resizeMode="contain" />
                 </TouchableOpacity>
                 <View>
-                    <Text style={styles.userProfileTxt}>{user?.displayName}</Text>
+                    <Text style={styles.userProfileTxt}>{currentUser?.displayName}</Text>
                 </View>
             </View>
             <FlatList

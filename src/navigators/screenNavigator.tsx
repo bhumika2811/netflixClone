@@ -4,12 +4,14 @@ import BottomNavigation from './bottomNavigator';
 import User from '../screens/users'
 import NetflixLoginPage from '../screens/loginPage';
 import SignUp from '../screens/signUp';
+import EmailVerification from '../screens/emailVerification';
 const Stack = createNativeStackNavigator();
 const ScreenNavigator = () => {
     return (
 
         <Stack.Navigator initialRouteName='SignUp' screenOptions={{ headerShown: false }}>
             <Stack.Screen name='SignUp' component={SignUp} />
+            <Stack.Screen name='EmailVerification' component={EmailVerification}/>
             <Stack.Screen name="Login" component={NetflixLoginPage} />
             <Stack.Screen name="User" component={User}
             />

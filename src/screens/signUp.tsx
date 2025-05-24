@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity, StyleSheet, Image,
 } from 'react-native';
@@ -7,9 +7,11 @@ import { image } from '../constants/netflixName';
 
 import { getAuth, createUserWithEmailAndPassword, updateProfile } from '@react-native-firebase/auth';
 import { getApp } from '@react-native-firebase/app';
-
+import { FirebaseError } from 'firebase/app'; 
 const SignUp = () => {
   const [name, setName] = useState('');
+  // console.log({name});
+  
   const [nameError, setNameError] = useState('');
 
   const [email, setEmail] = useState('');
@@ -61,26 +63,60 @@ const SignUp = () => {
 
   const handleLogin = async () => {
     setGeneralError('');
+  
     if (!validateInputs()) return;
-
+  
     setLoading(true);
-
+  
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      // Update display name in Firebase user profile
+  
+      // Update display name
       await updateProfile(userCredential.user, { displayName: name });
+  
+      // Reload to reflect updated displayName
+      await userCredential.user.reload();
+  
       console.log('User created:', userCredential.user);
-
+  
+      // Send verification email
+      if (!userCredential.user.emailVerified) {
+        await userCredential.user.sendEmailVerification();
+        console.log('Verification email sent.');
+      }
+  
       setLoading(false);
-      navigation.navigate('User', { user: userCredential.user });
+  
+      // Navigate or show success message
+      navigation.navigate('EmailVerification', { user: userCredential.user });
     } catch (error) {
-      const message = error?.message || 'An unknown error occurred';
+      let message = 'An unknown error occurred';
+  
+      if (error) {
+        // console.log({error});
+        
+        switch (error.code) {
+          case 'auth/email-already-in-use':
+            message = 'This email is already registered.';
+            break;
+          case 'auth/invalid-email':
+            message = 'Invalid email address.';
+            break;
+          case 'auth/weak-password':
+            message = 'Password should be at least 6 characters.';
+            break;
+          default:
+            message = error.message;
+        }
+      }
+  
       setGeneralError(message);
       setLoading(false);
+      // console.log(error.code, "code");
+      
       console.log('Login error:', message);
     }
   };
-
   return (
     <View style={styles.container}>
       <View style={styles.logoContainer}>
@@ -130,6 +166,7 @@ const SignUp = () => {
 
       <TouchableOpacity
         style={[styles.loginButton, loading && styles.disabledButton]}
+        // onPress={()=>navigation.navigate('EmailVerification', {userEmail: "abc@ggmail.com"})}
         onPress={handleLogin}
         disabled={loading}
       >
