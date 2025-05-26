@@ -25,7 +25,7 @@ const firebaseConfig = Platform.OS === 'ios' ? firebaseConfigIOS : firebaseConfi
 
 if (getApps().length === 0) {
   const app = firebase.initializeApp(firebaseConfig);
-  console.log("Firebase initialized:", app.name);
+  // console.log("Firebase initialized:", app.name);
 } else {
   console.log("Firebase already initialized");
 }

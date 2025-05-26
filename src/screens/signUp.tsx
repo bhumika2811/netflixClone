@@ -186,6 +186,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#000',
     alignItems: 'center',
     justifyContent: 'center',
+    
   },
   logoContainer: {
     width: '100%',
@@ -198,7 +199,8 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     width: '80%',
-    marginBottom: 20,
+    marginBottom: 25,
+    gap:10
   },
   input: {
     backgroundColor: '#333',

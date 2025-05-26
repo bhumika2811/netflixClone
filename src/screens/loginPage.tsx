@@ -60,7 +60,7 @@ const NetflixLoginPage = () => {
 
       setLoading(false);
       console.log('Login successful!');
-      navigation.navigate('User',{user:user} );  // Adjust 'UserScreen' to your target screen name
+      navigation.navigate('User');  
     } catch (err) {
       setLoading(false);
       const message = err?.message || 'Login failed. Please try again.';
@@ -139,6 +139,8 @@ const styles = StyleSheet.create({
   inputContainer: {
     width: '80%',
     marginBottom: 20,
+    gap:15,
+    // backgroundColor:"red"
   },
   input: {
     backgroundColor: '#333',

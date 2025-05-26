@@ -16,10 +16,10 @@ const EmailVerification = ({ route, navigation }) => {
     let countdownId;
 
     const checkVerification = async () => {
-      const currentUser = auth().currentUser;
+      const currentUser = auth()?.currentUser;
       if (currentUser) {
-        await currentUser.reload();
-        if (currentUser.emailVerified) {
+        await currentUser?.reload();
+        if (currentUser?.emailVerified) {
           setStatus('verified');
           clearInterval(intervalId);
           clearTimeout(timeoutId);

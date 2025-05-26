@@ -7,6 +7,8 @@ import { colors } from '../constants/colors';
 import { userProfiles } from '../constants/userProfiles';
 import { fonts } from '../constants/fonts';
 import { useNavigation } from '@react-navigation/native';
+import auth from '@react-native-firebase/auth';
+
 interface RenderDataProps {
     item: {
         id: number;
@@ -52,7 +54,7 @@ const MyMenu = () => {
         }
     };
     const handleLogOut = () => {
-        navigation.navigate("Login")
+        auth().signOut()
     }
     return (
         <SafeAreaView style={styles.conatiner}>
